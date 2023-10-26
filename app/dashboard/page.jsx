@@ -10,7 +10,7 @@ const Dashboard = () => {
   const [linkComponents, setLinkComponents] = useState(["Link #1"])
   const [linkNames, setLinkNames] = useState(['Link #2', 'Link #3', 'Link #4', 'Link #5'])
 
-  const addLink = (platform, link, links) => {
+  const addLink = (platform, link) => {
     const newLink = { platform, link };
     setLinks([...links, newLink]);
   };

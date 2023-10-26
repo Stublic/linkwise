@@ -66,6 +66,10 @@ const Link = ({ platform, link }) => {
       alt = "stackoverflow";
       bgColor = "bg-[#EB7100]";
       break;
+      default:
+        icon = "./link-ico.svg";
+        alt = "link";
+        bgColor = "bg-[#191919]";
   }
 
   return (
@@ -73,7 +77,7 @@ const Link = ({ platform, link }) => {
       className={`self-stretch h-11 rounded-xl flex items-center justify-start px-4 gap-5 mb-2 ${bgColor}`}
     >
       <img src={icon} alt={alt} />
-      <a href={link} className="text-white body-M" target="_blank">
+      <a href={link} className="text-white body-M" target="_blank" rel="noopener noreferrer">
         {platform}
       </a>
     </div>
