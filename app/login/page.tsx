@@ -1,5 +1,5 @@
 import Form from "@/components/form";
-import Logo from "@/components/logo";
+import Logo from "@/components/Logo";
 
 export default function Login() {
   return (
