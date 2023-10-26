@@ -36,7 +36,7 @@ const Dashboard = () => {
           <p className="body-M text-[#737373]">Add/edit/remove links below and then share all your profiles with the world!</p>
           <button onClick={addLinkComponent} className="text-[#C6D752] border-[2px] border-[#C6D752] w-full rounded-lg shadow-sm py-3 my-8 hover:bg-[#E9F0A6] hover:text-[#C6D752]">+ Add new link</button>
           <div>
-            {linkComponents.map((title, i) => ( <AddLinkForm onAddLink={addLink} title={title} /> ))}
+            {linkComponents.map((title, i) => ( <AddLinkForm onAddLink={addLink} title={title} key={i} /> ))}
           </div>
           
         </div>
