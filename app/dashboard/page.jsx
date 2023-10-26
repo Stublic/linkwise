@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Links from "@/components/Link";
-import AddLinkForm from "@/components/AddLinkForm";
+import AddLinkForm from "@/components/Addlinkform";
 import NavBar from "@/components/Nav";
 
 const Dashboard = () => {
