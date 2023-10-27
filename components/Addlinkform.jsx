@@ -6,6 +6,7 @@ import Image from "next/image";
 const AddLinkForm = ({ onAddLink, title, index, onRemove  }) => {
   const [platform, setPlatform] = useState("");
   const [link, setLink] = useState("");
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
