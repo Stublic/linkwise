@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 const Link = ({ platform, link }) => {
   let icon = "";
@@ -72,7 +73,7 @@ const Link = ({ platform, link }) => {
     <div
       className={`self-stretch h-11 rounded-xl flex items-center justify-start px-4 gap-5 mb-2 ${bgColor}`}
     >
-      <img src={icon} alt={alt} />
+      <Image width={20} height={20} src={icon} alt={alt} />
       <a href={link} className="text-white body-M" target="_blank">
         {platform}
       </a>

@@ -3,30 +3,54 @@ import React, { useState } from "react";
 import Links from "@/components/Link";
 import AddLinkForm from "@/components/Addlinkform";
 import NavBar from "@/components/Nav";
+import Image from "next/image";
 
 const Dashboard = () => {
   const [links, setLinks] = useState([]);
   const [activeTab, setActiveTab] = useState("Links");
-  const [linkComponents, setLinkComponents] = useState(["Link #1"])
-  const [linkNames, setLinkNames] = useState(['Link #2', 'Link #3', 'Link #4', 'Link #5'])
+  const maxLinks = 5;
+  const [linkComponents, setLinkComponents] = useState([]);
+  const [showAddLinkForm, setShowAddLinkForm] = useState(false);
 
-  const addLink = (platform, link, links) => {
+
+  const addLink = (platform, link, index) => {
+    // Create a new link object
     const newLink = { platform, link };
+    
+    // Update the links state
     setLinks([...links, newLink]);
+    
+    // Update the linkComponents state using the index to replace the corresponding title
+    const updatedLinkComponents = [...linkComponents];
+    updatedLinkComponents[index] = `Link #${index + 1}`;
+    setLinkComponents(updatedLinkComponents);
   };
 
-  const addLinkComponent = () =>{
-    if (linkNames.length > 0) { 
-      
-      setLinkComponents([...linkComponents, linkNames[0]]);
-      linkNames.splice(0, 1);
-      
-    } else { 
-      
-      window.alert("Maximum number of links added!");
-      
-    } 
-  }
+  const addLinkComponent = () => {
+   setShowAddLinkForm(true);
+    if (linkComponents.length < maxLinks) {
+      const newTitle = `Link #${linkComponents.length + 1}`;
+       console.log('object');
+      setLinkComponents([...linkComponents, newTitle]);
+       // Hide the AddLinkForm after adding a new link
+    }else{
+      alert("Maximum number of links added!")
+    }
+  };
+
+  const removeLink = (index) => {
+    const updatedLinks = [...links];
+    updatedLinks.splice(index, 1);
+    
+    const updatedLinkComponents = [...linkComponents];
+    updatedLinkComponents.splice(index, 1);
+    
+    setLinks(updatedLinks);
+    setLinkComponents(updatedLinkComponents);
+    if(updatedLinks==0){
+      setShowAddLinkForm(false);
+    }
+  };
 
   const renderTabBody = () => {
     if (activeTab === "Links") {
@@ -35,10 +59,26 @@ const Dashboard = () => {
           <h2 className="heading-M text-[#333]">Customize your links</h2>
           <p className="body-M text-[#737373]">Add/edit/remove links below and then share all your profiles with the world!</p>
           <button onClick={addLinkComponent} className="text-[#C6D752] border-[2px] border-[#C6D752] w-full rounded-lg shadow-sm py-3 my-8 hover:bg-[#E9F0A6] hover:text-[#C6D752]">+ Add new link</button>
+          {showAddLinkForm ? (
           <div>
-            {linkComponents.map((title, i) => ( <AddLinkForm onAddLink={addLink} title={title} key={i} /> ))}
+            {linkComponents.map((title, index) => (
+              <AddLinkForm
+                onAddLink={addLink}
+                onRemove={removeLink}
+                title={title}
+                key={index}
+                index={index}
+              />
+            ))}
           </div>
-          
+           ) : (
+             <div className="flex flex-col justify-center items-center">
+               <Image className="mt-6" width={280} height={260} src="/start.svg" alt="start creating links"/>
+               <h2 className="heading-M my-6 text-center">Let’s get you started</h2>
+               <p className="body-M max-w-lg text-center">Use the “Add new link” button to get started. Once you have more than one link, you can reorder and edit them. We’re here to help you share your profiles with everyone!</p>
+             </div>
+           )
+     }
         </div>
       );
     } else if (activeTab === "Profile") {
@@ -89,7 +129,7 @@ const Dashboard = () => {
               </div>
           </div>
         </div>
-        <div className="md:w-3/5 sm:w-full sm:ml-8 rounded-xl my-2 mr-8 p-4 shadow bg-white">
+        <div className="md:w-3/5 sm:w-full rounded-xl my-2 mx-8 p-4 shadow bg-white">
           {renderTabBody()}
         </div>
       </div>

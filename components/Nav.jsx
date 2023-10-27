@@ -1,15 +1,13 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const Nav = ({ activeTab, onTabChange }) => {
   return (
-    <>
-    {
-      1<2 ? (
         <div className="m-8 rounded-xl flex justify-between items-center p-8 bg-white shadow">
       <div className="flex justify-start items-center  h-[60px]">
-        <img src="/logo.svg" alt="linkwise" />
+        <Image width={45} height={45} src="/logo.svg" alt="linkwise" />
         <h1
           className="text-zinc-800
                       text-[40px]
@@ -17,7 +15,8 @@ const Nav = ({ activeTab, onTabChange }) => {
                       font-['Arial']
                       leading-[60px]
                       hidden
-                      md:inline-flex"
+                      md:inline-flex
+                      pl-2"
         >
           Linkwise
         </h1>
@@ -32,9 +31,9 @@ const Nav = ({ activeTab, onTabChange }) => {
           onClick={() => onTabChange("Links")}
         >
           {activeTab === "Links" ? (
-            <img src="/link-green.svg" alt="" className="px-1" />
+            <Image width={25} height={25} src="/link-green.svg" alt="" className="px-1" />
           ) : (
-            <img src="/link-ico.svg" alt="" className="px-1" />
+            <Image width={25} height={25} src="/link-ico.svg" alt="" className="px-1" />
           )}
 
           <span className="hidden sm:inline-flex">Links</span>
@@ -48,9 +47,9 @@ const Nav = ({ activeTab, onTabChange }) => {
           onClick={() => onTabChange("Profile")}
         >
           {activeTab === "Profile" ? (
-            <img src="/user-circle-green.svg" alt="" className="px-1" />
+            <Image width={25} height={25} src="/user-circle-green.svg" alt="" className="px-1" />
           ) : (
-            <img src="/user-circle.svg" alt="" className="px-1" />
+            <Image width={25} height={25} src="/user-circle.svg" alt="" className="px-1" />
           )}
           <span className="hidden sm:inline-flex">Profile</span>
         </button>
@@ -60,21 +59,13 @@ const Nav = ({ activeTab, onTabChange }) => {
         className="py-3 px-5  heading-S text-[#C6D752] border-[2px] rounded-md border-[#C6D752]  hover:bg-[#E9F0A6] hover:text-[#C6D752] "
       >
         <span className="hidden sm:inline-flex">Preview</span>
-        <img
+        <Image width={25} height={25}
           src="/preview-eye.svg"
           alt="preview"
           className="px-1 inline-flex sm:hidden"
         />
       </Link>
     </div>
-      ) :
-      (
-        <div><h1>asd</h1></div>
-      )
-    }
-     
-    </>
-   
   );
 };
 
