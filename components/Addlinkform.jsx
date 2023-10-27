@@ -12,6 +12,7 @@ const AddLinkForm = ({ onAddLink, title, index, onRemove  }) => {
     e.preventDefault();
     onAddLink(platform, link, index);
     setPlatform(platform);
+    setLink(e.target.value)
   };
 
   return (
@@ -63,7 +64,7 @@ const AddLinkForm = ({ onAddLink, title, index, onRemove  }) => {
           <input
             type="url"
             value={link}
-            onInput={(e) => setLink(e.target.value)}
+            // onInput={(e) => setLink(e.target.value)}
             onChange={handleSubmit}
             placeholder="Paste your link here"
             className="w-full py-3 border-[2px] border-[#D9D9D9] rounded-xl pl-8"

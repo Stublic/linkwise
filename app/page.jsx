@@ -53,7 +53,7 @@ export default function Home() {
       </div>
     </div>
     <div>
-      <Image className="rounded-lg" src='/hero.png' width={350} height={500}/>
+      <Image className="rounded-lg" src='/hero.png' width={350} height={500} alt="linkwise"/>
     </div>
   </div>
     </div>
