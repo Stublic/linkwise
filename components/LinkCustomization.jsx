@@ -4,8 +4,7 @@ import AddLinkForm from "@/components/Addlinkform";
 import Image from "next/image";
 
 const LinkCustomization = ({ addLinkComponent, showAddLinkForm, linkComponents, addLink, removeLink, handleSubmit }) => {
-  const linkDataInLocalStorage = JSON.parse(localStorage.getItem('linkData') || '[]'); // Parse the data and provide a default of an empty array
-
+  const linkDataInLocalStorage = typeof window !== "undefined" ? JSON.parse(localStorage.getItem('linkData') || '[]') : [];
   return (
     <div className="p-6">
       <h2 className="heading-M text-[#333]">Customize your links</h2>
