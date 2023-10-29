@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import prisma from "@/lib/prisma";
 
 const AddLinkForm = ({ onAddLink, title, index, onRemove }) => {
