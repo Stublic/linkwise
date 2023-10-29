@@ -31,15 +31,15 @@ const Nav = ({ activeTab, onTabChange }) => {
           onClick={() => onTabChange("Links")}
         >
           {activeTab === "Links" ? (
-            <Image width={25} height={25} src="/link-green.svg" alt="" className="px-1" />
+            <Image width={25} height={25} src="/link-green.svg" alt="link" className="px-1" />
           ) : (
-            <Image width={25} height={25} src="/link-ico.svg" alt="" className="px-1" />
+            <Image width={25} height={25} src="/link-ico.svg" alt="link" className="px-1" />
           )}
 
           <span className="hidden sm:inline-flex">Links</span>
         </button>
         <button
-          className={`flex py-3 px-5  mx-2 rounded-md heading-S ${
+          className={`flex py-3 px-5  mx-2 rounded-md heading-S  ${
             activeTab === "Profile"
               ? "bg-[#E9F0A6] text-[#C6D752]"
               : "bg-none text-[#737373]"

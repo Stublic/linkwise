@@ -62,7 +62,7 @@ const Link = ({ platform, link }) => {
       alt = "hashnode";
       bgColor = "bg-[#0230D1]";
       break;
-    case "Stack Overflow":
+    case "StackOverflow":
       icon = "./stackoverflow.svg";
       alt = "stackoverflow";
       bgColor = "bg-[#EB7100]";

@@ -1,9 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Links from "@/components/Link";
-import AddLinkForm from "@/components/Addlinkform";
 import NavBar from "@/components/Nav";
-import Image from "next/image";
 import LinkCustomization from '@/components/LinkCustomization'
 import Profile from '@/components/Profile'
 
@@ -16,13 +14,8 @@ const Dashboard = () => {
 
 
   const addLink = (platform, link, index) => {
-    // Create a new link object
     const newLink = { platform, link };
-    
-    // Update the links state
     setLinks([...links, newLink]);
-    
-    // Update the linkComponents state using the index to replace the corresponding title
     const updatedLinkComponents = [...linkComponents];
     updatedLinkComponents[index] = `Link #${index + 1}`;
     setLinkComponents(updatedLinkComponents);
@@ -34,7 +27,6 @@ const Dashboard = () => {
       const newTitle = `Link #${linkComponents.length + 1}`;
        console.log('object');
       setLinkComponents([...linkComponents, newTitle]);
-       // Hide the AddLinkForm after adding a new link
     }else{
       alert("Maximum number of links added!")
     }
@@ -43,7 +35,7 @@ const Dashboard = () => {
   const removeLink = (index) => {
     const updatedLinks = [...links];
     updatedLinks.splice(index, 1);
-    
+
     const updatedLinkComponents = [...linkComponents];
     updatedLinkComponents.splice(index, 1);
     
@@ -76,6 +68,7 @@ const Dashboard = () => {
     <div className="bg-[#FAFAFA]">
       <NavBar activeTab={activeTab} onTabChange={(tab) => setActiveTab(tab)} />
       <div className="flex">
+        //start component
         <div className="hidden md:inline-flex h-full min-h-[75vh] w-2/5 p-2 mx-8 my-2 rounded-xl bg-white shadow justify-center items-center gap-8 ">
           <div className="h-[70vh] flex flex-col justify-between items-center w-80 bg-[url('/mobile.png')] bg-center bg-no-repeat bg-auto">
               <div className="flex-col justify-start items-center gap-6 flex my-12 pt-2">
@@ -109,6 +102,7 @@ const Dashboard = () => {
               </div>
           </div>
         </div>
+        //finish component
         <div className="md:w-3/5 sm:w-full rounded-xl my-2 mx-8 p-4 shadow bg-white">
           {renderTabBody()}
         </div>
