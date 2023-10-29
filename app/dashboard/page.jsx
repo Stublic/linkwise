@@ -13,7 +13,6 @@ const Dashboard = () => {
   const [showAddLinkForm, setShowAddLinkForm] = useState(false);
 
   useEffect(() => {
-    // Load data from local storage when the component mounts
     const storedLinks = JSON.parse(localStorage.getItem("links"));
     const storedLinkComponents = JSON.parse(localStorage.getItem("linkComponents"));
 
@@ -29,8 +28,6 @@ const Dashboard = () => {
     const updatedLinkComponents = [...linkComponents];
     updatedLinkComponents[index] = `Link #${index + 1}`;
     setLinkComponents(updatedLinkComponents);
-
-     // Save data to local storage
      localStorage.setItem("links", JSON.stringify([...links, newLink]));
      localStorage.setItem("linkComponents", JSON.stringify(updatedLinkComponents));
   };

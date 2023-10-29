@@ -13,48 +13,48 @@ export default function Form({ type }: { type: "login" | "register" }) {
 
   return (
     <form
-    onSubmit={(e) => {
-      e.preventDefault();
-      setLoading(true);
-      if (type === "login") {
-        signIn("credentials", {
-          redirect: false,
-          email: e.currentTarget.email.value,
-          password: e.currentTarget.password.value,
-          // @ts-ignore
-        }).then(({ error }) => {
-          if (error) {
-            setLoading(false);
-            toast.error(error);
-          } else {
-            router.refresh();
-            router.push("/protected");
-          }
-        });
-      } else {
-        fetch("/api/auth/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+      onSubmit={(e) => {
+        e.preventDefault();
+        setLoading(true);
+        if (type === "login") {
+          signIn("credentials", {
+            redirect: false,
             email: e.currentTarget.email.value,
             password: e.currentTarget.password.value,
-          }),
-        }).then(async (res) => {
-          setLoading(false);
-          if (res.status === 200) {
-            toast.success("Account created! Redirecting to login...");
-            setTimeout(() => {
-              router.push("/login");
-            }, 2000);
-          } else {
-            const { error } = await res.json();
-            toast.error(error);
-          }
-        });
-      }
-    }}
+            // @ts-ignore
+          }).then(({ error }) => {
+            if (error) {
+              setLoading(false);
+              toast.error(error);
+            } else {
+              router.refresh();
+              router.push("/protected");
+            }
+          });
+        } else {
+          fetch("/api/auth/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: e.currentTarget.email.value,
+              password: e.currentTarget.password.value,
+            }),
+          }).then(async (res) => {
+            setLoading(false);
+            if (res.status === 200) {
+              toast.success("Account created! Redirecting to login...");
+              setTimeout(() => {
+                router.push("/login");
+              }, 2000);
+            } else {
+              const { error } = await res.json();
+              toast.error(error);
+            }
+          });
+        }
+      }}
       className="flex flex-col space-y-4  px-4 py-8 sm:px-16"
     >
       <div>

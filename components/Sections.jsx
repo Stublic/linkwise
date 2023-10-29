@@ -1,8 +1,7 @@
-import React from 'react';
-import LinkCustomization from '@/components/LinkCustomization';
-import Links from '@/components/Link';
+import React from "react";
+import Links from "@/components/Link";
 
-const LeftSection = ({ links, linkComponents, addLinkComponent, showAddLinkForm, addLink, removeLink }) => (
+const LeftSection = ({ links }) => (
   <div className="hidden md:inline-flex h-full min-h-[75vh] w-2/5 p-2 mx-8 my-2 rounded-xl bg-white shadow justify-center items-center gap-8 ">
     <div className="h-[70vh] flex flex-col justify-between items-center w-80 bg-[url('/mobile.png')] bg-center bg-no-repeat bg-auto">
       <div className="flex-col justify-start items-center gap-6 flex my-12 pt-2">
@@ -21,11 +20,7 @@ const LeftSection = ({ links, linkComponents, addLinkComponent, showAddLinkForm,
           </div>
         ) : (
           links.map((link, index) => (
-            <Links
-              key={index}
-              platform={link.platform}
-              link={link.link}
-            />
+            <Links key={index} platform={link.platform} link={link.link} />
           ))
         )}
       </div>
@@ -33,7 +28,7 @@ const LeftSection = ({ links, linkComponents, addLinkComponent, showAddLinkForm,
   </div>
 );
 
-const RightSection = ({ activeTab, setActiveTab, renderTabBody }) => (
+const RightSection = ({ renderTabBody }) => (
   <div className="md:w-3/5 sm:w-full rounded-xl my-2 mx-8 p-4 shadow bg-white">
     {renderTabBody()}
   </div>

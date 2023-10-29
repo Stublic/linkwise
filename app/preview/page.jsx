@@ -16,8 +16,6 @@ const Preview = () => {
     if (storedLinks) {
       setLinks(storedLinks);
     }
-
-    // Load user details from local storage when the component mounts
     const storedFirstName = localStorage.getItem("firstName");
     const storedLastName = localStorage.getItem("lastName");
     const storedEmail = localStorage.getItem("email");
@@ -70,7 +68,7 @@ const Preview = () => {
         <Image
           width={125}
           height={125}
-          src='/avatar.svg'
+          src="/avatar.svg"
           alt="avatar"
           className=" rounded-full border-[2px] border-[#C6D752]"
         />
@@ -91,9 +89,15 @@ const Preview = () => {
             class="flex items-center w-full max-w-md p-4 space-x-4 text-gray-500 bg-[#333333] rounded-lg shadow dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800"
             role="alert"
           >
-            <Image width={30} height={30} src="/link-ico.svg" alt="link" className="px-1" />
+            <Image
+              width={30}
+              height={30}
+              src="/link-ico.svg"
+              alt="link"
+              className="px-1"
+            />
             <div class="heading-S text-[#FAFAFA]">
-            The link has been copied to your clipboard!
+              The link has been copied to your clipboard!
             </div>
           </div>
         </div>

@@ -8,6 +8,7 @@ const Profile = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [imagePreview, setImagePreview] = useState(null);
+  const [message, setMessage] = useState(false);
 
   useEffect(() => {
     const storedFirstName = localStorage.getItem('firstName');
@@ -27,9 +28,7 @@ const Profile = () => {
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
-
     if (file) {
-      // Read the image file and set the preview
       const reader = new FileReader();
       reader.onload = (event) => {
         setImagePreview(event.target.result);
@@ -43,6 +42,10 @@ const Profile = () => {
     localStorage.setItem('firstName', firstName);
     localStorage.setItem('lastName', lastName);
     localStorage.setItem('email', email);
+    setMessage(true);
+    setTimeout(() => {
+      setMessage(false);
+    }, 2000);
   };
 
   return (
@@ -112,6 +115,20 @@ const Profile = () => {
         <SignOut/>
         <button onClick={handleSave} className='py-3 px-5 mx-2 rounded-md heading-S border-[2px] border-[#C6D752] bg-none text-[#C6D752] hover:bg-[#E9F0A6] '>Save</button>
       </div>
+      {
+        message && <div className="absolute bottom-5  left-1/2 -translate-x-1/2">
+          <div
+            id="toast-simple"
+            class="flex items-center w-full max-w-md p-4 space-x-4 text-gray-500 bg-[#333333] rounded-lg shadow dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800"
+            role="alert"
+          >
+            <Image width={30} height={30} src="/floppy-disk.svg" alt="link" className="px-1" />
+            <div class="heading-S text-[#FAFAFA]">
+            Your changes have been successfully saved!
+            </div>
+          </div>
+        </div>
+      }
     </div>
   );
 };
