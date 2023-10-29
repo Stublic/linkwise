@@ -73,6 +73,7 @@ const Preview = () => {
           width={155}
           height={155}
           src="/profile-pic.png"
+          alt="avatar"
           className=" rounded-full border-[2px] border-[#C6D752]"
         />
         <span className="heading-M text-[#333]">
