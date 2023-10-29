@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from "react";
-import { prisma } from "../lib/prisma"; // Import the Prisma client
+import prisma from "@/lib/prisma";
 
 const AddLinkForm = ({ onAddLink, title, index, onRemove }) => {
   const [platform, setPlatform] = useState("");

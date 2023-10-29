@@ -4,7 +4,7 @@ import { LeftSection, RightSection } from '@/components/Sections';
 import NavBar from "@/components/Nav";
 import LinkCustomization from '@/components/LinkCustomization'
 import Profile from '@/components/Profile'
-import { prisma } from '../lib/prisma';
+import prisma from "@/lib/prisma";
 
 
 const Dashboard = () => {

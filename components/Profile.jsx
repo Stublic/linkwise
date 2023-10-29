@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import SignOut from './sign-out';
-import { prisma } from '../lib/prisma';
+import prisma from "@/lib/prisma";
 import { unstable_getServerSession } from 'next-auth/next';
 
 const Profile = () => {
