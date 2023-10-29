@@ -16,12 +16,9 @@ const AddLinkForm = ({ onAddLink, title, index, onRemove }) => {
   };
 
   const handleRemove = () => {
-    // Remove the linkData for the given index
     const updatedData = loadFromLocalStorage();
-    updatedData.splice(index, 1); // Remove the data at the given index
+    updatedData.splice(index, 1);
     saveToLocalStorage(updatedData);
-
-    // Call the onRemove function
     onRemove(index);
   };
 
@@ -35,25 +32,17 @@ const AddLinkForm = ({ onAddLink, title, index, onRemove }) => {
         clearErrorAfterDelay();
         return;
       }
-  
-      // Regular expression pattern to validate URLs
       const urlPattern = /^(https?:\/\/)?([\w\d.-]+)\.([a-z.]{2,6})([/\w\d.-]*)*\/?$/;
-  
-      // Check if the entered link is a valid URL
       if (!link.match(urlPattern)) {
         setError("Please enter a valid URL.");
         clearErrorAfterDelay();
         return;
       }
-  
-      // Check if the platform name is included in the link
       if (!link.toLowerCase().includes(platform.toLowerCase())) {
         setError(`The link must contain the platform name "${platform}".`);
         clearErrorAfterDelay();
         return;
       }
-  
-          // Check for duplicate entries
     const updatedData = loadFromLocalStorage();
     const isDuplicate = updatedData.some(
       (entry, i) => entry.platform === platform || entry.link === link
@@ -65,8 +54,6 @@ const AddLinkForm = ({ onAddLink, title, index, onRemove }) => {
       clearErrorAfterDelay();
       return;
     }
-      // If all validation passes, clear the error
-
       setError("");
       onAddLink(platform, link, index);
       setPlatform(platform);
@@ -79,11 +66,10 @@ const AddLinkForm = ({ onAddLink, title, index, onRemove }) => {
     const clearErrorAfterDelay = () => {
       setTimeout(() => {
         setError("");
-      }, 2000); // Clear the error message after 2 seconds (2000 milliseconds)
+      }, 2000);
     };
 
     useEffect(() => {
-      // Load data from local storage on component mount
       const data = loadFromLocalStorage();
       if (data.length > 0) {
         setPlatform(data[index]?.platform || "");

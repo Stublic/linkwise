@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Links from "@/components/Link";
-import { Alert } from "flowbite-react";
 
 const Preview = () => {
   const [links, setLinks] = useState([]);
@@ -13,7 +12,6 @@ const Preview = () => {
   const [copy, setCopy] = useState(false);
 
   useEffect(() => {
-    // Load links from local storage when the component mounts
     const storedLinks = JSON.parse(localStorage.getItem("links"));
     if (storedLinks) {
       setLinks(storedLinks);
@@ -36,9 +34,9 @@ const Preview = () => {
   }, []);
 
   const handleCopyToClipboard = () => {
-    const shareURL = window.location.href; // Get the current URL
+    const shareURL = window.location.href;
     navigator.clipboard
-      .writeText(shareURL) // Copy URL to clipboard
+      .writeText(shareURL)
       .then(() => {
         setCopy(true);
         setTimeout(() => {
@@ -70,9 +68,9 @@ const Preview = () => {
       </div>
       <div className=" rounded-xl w-[349px] max-w-[349px] bg-white flex flex-col justify-center items-center p-8 shadow absolute left-1/2 -translate-x-1/2 top-1/3">
         <Image
-          width={155}
-          height={155}
-          src="/profile-pic.png"
+          width={125}
+          height={125}
+          src='/avatar.svg'
           alt="avatar"
           className=" rounded-full border-[2px] border-[#C6D752]"
         />
