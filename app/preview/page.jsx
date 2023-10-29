@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Links from "@/components/Link";
 import { Alert } from "flowbite-react";
+import { unstable_getServerSession } from "next-auth/next";
 
 const Preview = () => {
   const [links, setLinks] = useState([]);
@@ -13,26 +14,33 @@ const Preview = () => {
   const [copy, setCopy] = useState(false);
 
   useEffect(() => {
-    // Load links from local storage when the component mounts
-    const storedLinks = JSON.parse(localStorage.getItem("links"));
-    if (storedLinks) {
-      setLinks(storedLinks);
-    }
+    const fetchUserDetails = async () => {
+      const session = await unstable_getServerSession();
 
-    // Load user details from local storage when the component mounts
-    const storedFirstName = localStorage.getItem("firstName");
-    const storedLastName = localStorage.getItem("lastName");
-    const storedEmail = localStorage.getItem("email");
+      if (session) {
+        const userEmail = session.user?.email;
 
-    if (storedFirstName) {
-      setFirstName(storedFirstName);
-    }
-    if (storedLastName) {
-      setLastName(storedLastName);
-    }
-    if (storedEmail) {
-      setEmail(storedEmail);
-    }
+        if (userEmail) {
+          // Make an API request to fetch user details and links
+          try {
+            const response = await fetch(`/api/user/${userEmail}`);
+            if (response.ok) {
+              const data = await response.json();
+              setFirstName(data.firstName);
+              setLastName(data.lastName);
+              setEmail(data.email);
+              setLinks(data.links);
+            } else {
+              console.error("Failed to fetch user details and links");
+            }
+          } catch (error) {
+            console.error("API request error:", error);
+          }
+        }
+      }
+    };
+
+    fetchUserDetails();
   }, []);
 
   const handleCopyToClipboard = () => {
@@ -49,7 +57,6 @@ const Preview = () => {
         console.error("Failed to copy to clipboard: ", error);
       });
   };
-
   return (
     <div className="min-h-[100vh] bg-[#FAFAFA] relative">
       <div className=" min-h-[40vh] pt-8 bg-[#C6D752] rounded-b-3xl">

@@ -4,6 +4,8 @@ import { LeftSection, RightSection } from '@/components/Sections';
 import NavBar from "@/components/Nav";
 import LinkCustomization from '@/components/LinkCustomization'
 import Profile from '@/components/Profile'
+import { prisma } from '../lib/prisma';
+
 
 const Dashboard = () => {
   const [links, setLinks] = useState([]);
@@ -13,26 +15,32 @@ const Dashboard = () => {
   const [showAddLinkForm, setShowAddLinkForm] = useState(false);
 
   useEffect(() => {
-    // Load data from local storage when the component mounts
-    const storedLinks = JSON.parse(localStorage.getItem("links"));
-    const storedLinkComponents = JSON.parse(localStorage.getItem("linkComponents"));
-
-    if (storedLinks && storedLinkComponents) {
-      setLinks(storedLinks);
-      setLinkComponents(storedLinkComponents);
-    }
+    // Fetch links from the database using Prisma
+    prisma.link.findMany().then((dbLinks) => {
+      setLinks(dbLinks);
+      const updatedLinkComponents = dbLinks.map((link, index) => `Link #${index + 1}`);
+      setLinkComponents(updatedLinkComponents);
+    });
   }, []);
+  
 
   const addLink = (platform, link, index) => {
     const newLink = { platform, link };
-    setLinks([...links, newLink]);
+
+    // Create a new link in the database using Prisma
+    prisma.link.create({
+      data: {
+        url: link,
+      },
+    }).then((dbLink) => {
+      setLinks([...links, dbLink]);
+    });
+  
     const updatedLinkComponents = [...linkComponents];
     updatedLinkComponents[index] = `Link #${index + 1}`;
     setLinkComponents(updatedLinkComponents);
 
-     // Save data to local storage
-     localStorage.setItem("links", JSON.stringify([...links, newLink]));
-     localStorage.setItem("linkComponents", JSON.stringify(updatedLinkComponents));
+
   };
 
   const addLinkComponent = () => {
@@ -47,21 +55,24 @@ const Dashboard = () => {
   };
 
   const removeLink = (index) => {
-    const updatedLinks = [...links];
-    updatedLinks.splice(index, 1);
-
-    const updatedLinkComponents = [...linkComponents];
-    updatedLinkComponents.splice(index, 1);
-    
-    setLinks(updatedLinks);
-    setLinkComponents(updatedLinkComponents);
-    if(updatedLinkComponents==0){
-      setShowAddLinkForm(false);
-      
-    }
-
-    localStorage.setItem("links", JSON.stringify(updatedLinks));
-    localStorage.setItem("linkComponents", JSON.stringify(updatedLinkComponents));
+    const linkToDelete = links[index];
+  
+    // Delete the link from the database using Prisma
+    prisma.link.delete({
+      where: { id: linkToDelete.id },
+    }).then(() => {
+      const updatedLinks = [...links];
+      updatedLinks.splice(index, 1);
+  
+      const updatedLinkComponents = [...linkComponents];
+      updatedLinkComponents.splice(index, 1);
+  
+      setLinks(updatedLinks);
+      setLinkComponents(updatedLinkComponents);
+      if (updatedLinkComponents.length === 0) {
+        setShowAddLinkForm(false);
+      }
+    });
   };
 
   const renderTabBody = () => {

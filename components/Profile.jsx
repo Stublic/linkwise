@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import SignOut from './sign-out';
+import { prisma } from '../lib/prisma';
+import { unstable_getServerSession } from 'next-auth/next';
 
 const Profile = () => {
   const [firstName, setFirstName] = useState('');
@@ -11,26 +13,32 @@ const Profile = () => {
   const [message, setMessage] = useState(false);
 
   useEffect(() => {
-    // Load user details from local storage when the component mounts
-    const storedFirstName = localStorage.getItem('firstName');
-    const storedLastName = localStorage.getItem('lastName');
-    const storedEmail = localStorage.getItem('email');
+    const fetchUserDetails = async () => {
+      const session = await unstable_getServerSession();
 
-    if (storedFirstName) {
-      setFirstName(storedFirstName);
-    }
-    if (storedLastName) {
-      setLastName(storedLastName);
-    }
-    if (storedEmail) {
-      setEmail(storedEmail);
-    }
+      if (session) {
+        const userEmail = session.user?.email;
 
-    // Load image preview from local storage
-    const storedImage = localStorage.getItem('userImage');
-    if (storedImage) {
-      setImagePreview(storedImage);
-    }
+        if (userEmail) {
+          // Load user details from the database
+          try {
+            const user = await prisma.user.findFirst({
+              where: { email: userEmail },
+            });
+
+            if (user) {
+              setFirstName(user.firstName);
+              setLastName(user.lastName);
+              setEmail(user.email);
+            }
+          } catch (error) {
+            console.error('Error fetching user details:', error);
+          }
+        }
+      }
+    };
+
+    fetchUserDetails();
   }, []);
 
   const handleImageUpload = async (e) => {
@@ -49,7 +57,6 @@ const Profile = () => {
         if (response.ok) {
           const { url } = await response.json();
           setImagePreview(url);
-          console.log(imagePreview);
         } else {
           console.error('Image upload failed');
         }
@@ -59,19 +66,25 @@ const Profile = () => {
     }
   };
 
-  const handleSave = () => {
-    // Save user details to local storage
-    localStorage.setItem('firstName', firstName);
-    localStorage.setItem('lastName', lastName);
-    localStorage.setItem('email', email);
-    setMessage(true);
-    setTimeout(() => {
-      setMessage(false);
-    }, 2000);
-    
+  const handleSave = async () => {
+    try {
+      // Update user details in the database
+      await prisma.user.update({
+        where: { email: email }, // Use the user's email to identify them
+        data: {
+          firstName: firstName,
+          lastName: lastName,
+        },
+      });
+
+      setMessage(true);
+      setTimeout(() => {
+        setMessage(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Error updating user details:', error);
+    }
   };
-
-
 
   return (
     <div className="p-6">
@@ -141,7 +154,7 @@ const Profile = () => {
       </div>
       <div className='flex justify-between items-center'>
         <SignOut/>
-        <button onClick={handleSave} className='py-3 px-5 mx-2 rounded-md heading-S border-[2px] border-[#C6D752] bg-none text-[#C6D752] hover:bg-[#E9F0A6]'>Save</button>
+        <button onClick={handleSave} className='py-3 px-5 mx-2 rounded-md heading-S border-[2px] border-[#C6D752] bg-none text-[#C6D752] hover-bg-[#E9F0A6]'>Save</button>
       </div>
       {
         message && <div className="absolute bottom-5  left-1/2 -translate-x-1/2">
@@ -157,66 +170,9 @@ const Profile = () => {
           </div>
         </div>
       }
-      
     </div>
   );
 };
 
 export default Profile;
 
-
-
-// import { useState, useRef } from 'react';
-
-// const Profile = () => {
-//   const inputFileRef = useRef(null);
-//   const [imagePreview, setImagePreview] = useState(null);
-
-//   const handleImageUpload = async (event) => {
-//     event.preventDefault();
-
-//     const file = inputFileRef.current.files[0];
-
-//     if (file) {
-//       const formData = new FormData();
-//       formData.append('file', file);
-
-//       try {
-//         const response = await fetch(`/api/avatar/upload?filename=${file.name}`, {
-//           method: 'POST',
-//           body: formData,
-//         });
-
-//         if (response.ok) {
-//           const newBlob = await response.json();
-//           setImagePreview(newBlob.url);
-
-//           // Save the image URL to local storage
-//           localStorage.setItem('userImage', newBlob.url);
-//         } else {
-//           console.error('Image upload failed');
-//         }
-//       } catch (error) {
-//         console.error('Image upload error:', error);
-//       }
-//     }
-//   };
-
-//   return (
-//     <>
-//       <h1>Profile Details</h1>
-
-//       <form onSubmit={handleImageUpload}>
-//         <input name="file" ref={inputFileRef} type="file" required />
-//         <button type="submit">Upload Image</button>
-//       </form>
-//       {imagePreview && (
-//         <div>
-//           <img src={imagePreview} alt="Uploaded Image" />
-//         </div>
-//       )}
-//     </>
-//   );
-// };
-
-// export default Profile;

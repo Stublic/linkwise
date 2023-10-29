@@ -1,95 +1,99 @@
+'use client';
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import { prisma } from "../lib/prisma"; // Import the Prisma client
 
 const AddLinkForm = ({ onAddLink, title, index, onRemove }) => {
   const [platform, setPlatform] = useState("");
   const [link, setLink] = useState("");
   const [error, setError] = useState("");
 
-  const saveToLocalStorage = (data) => {
-    localStorage.setItem("linkData", JSON.stringify(data));
-  };
-  
-  const loadFromLocalStorage = () => {
-    const storedData = localStorage.getItem("linkData");
-    return storedData ? JSON.parse(storedData) : [];
-  };
+  const handleRemove = async () => {
+    // Remove the link from the database using Prisma
+    await prisma.link.delete({
+      where: { id: index },
+    });
 
-  const handleRemove = () => {
-    // Remove the linkData for the given index
-    const updatedData = loadFromLocalStorage();
-    updatedData.splice(index, 1); // Remove the data at the given index
-    saveToLocalStorage(updatedData);
-
-    // Call the onRemove function
     onRemove(index);
   };
 
-    const handleBlur = () => {
-      validateLink();
-    };
-  
-    const validateLink = () => {
-      if (!platform) {
-        setError("Please select a platform.");
-        clearErrorAfterDelay();
-        return;
-      }
-  
-      // Regular expression pattern to validate URLs
-      const urlPattern = /^(https?:\/\/)?([\w\d.-]+)\.([a-z.]{2,6})([/\w\d.-]*)*\/?$/;
-  
-      // Check if the entered link is a valid URL
-      if (!link.match(urlPattern)) {
-        setError("Please enter a valid URL.");
-        clearErrorAfterDelay();
-        return;
-      }
-  
-      // Check if the platform name is included in the link
-      if (!link.toLowerCase().includes(platform.toLowerCase())) {
-        setError(`The link must contain the platform name "${platform}".`);
-        clearErrorAfterDelay();
-        return;
-      }
-  
-          // Check for duplicate entries
-    const updatedData = loadFromLocalStorage();
-    const isDuplicate = updatedData.some(
-      (entry, i) => entry.platform === platform || entry.link === link
-    );
+  const handleBlur = () => {
+    validateLink();
+  };
 
-    if (isDuplicate) {
-      
+  const validateLink = async () => {
+    if (!platform) {
+      setError("Please select a platform.");
+      clearErrorAfterDelay();
+      return;
+    }
+
+    // Regular expression pattern to validate URLs
+    const urlPattern = /^(https?:\/\/)?([\w\d.-]+)\.([a-z.]{2,6})([/\w\d.-]*)*\/?$/;
+
+    // Check if the entered link is a valid URL
+    if (!link.match(urlPattern)) {
+      setError("Please enter a valid URL.");
+      clearErrorAfterDelay();
+      return;
+    }
+
+    // Check if the platform name is included in the link
+    if (!link.toLowerCase().includes(platform.toLowerCase())) {
+      setError(`The link must contain the platform name "${platform}".`);
+      clearErrorAfterDelay();
+      return;
+    }
+
+    // Check for duplicate entries in the database using Prisma
+    const duplicateEntry = await prisma.link.findFirst({
+      where: {
+        OR: [{ platform, link }],
+      },
+    });
+
+    if (duplicateEntry) {
       setError("This platform or link is already added.");
       clearErrorAfterDelay();
       return;
     }
-      // If all validation passes, clear the error
 
+    // If all validation passes, clear the error
+    setError("");
+
+    // Create or update the link in the database using Prisma
+    const createdLink = await prisma.link.upsert({
+      where: { id: index },
+      update: { platform, link },
+      create: { platform, link },
+    });
+
+    onAddLink(createdLink.platform, createdLink.link, createdLink.id);
+    setPlatform(createdLink.platform);
+    setLink(createdLink.link);
+  };
+
+  const clearErrorAfterDelay = () => {
+    setTimeout(() => {
       setError("");
-      onAddLink(platform, link, index);
-      setPlatform(platform);
-      setLink(link);
+    }, 2000); // Clear the error message after 2 seconds
+  };
 
-      updatedData[index] = { platform, link };
-      saveToLocalStorage(updatedData);
-    };
-
-    const clearErrorAfterDelay = () => {
-      setTimeout(() => {
-        setError("");
-      }, 2000); // Clear the error message after 2 seconds (2000 milliseconds)
-    };
-
-    useEffect(() => {
-      // Load data from local storage on component mount
-      const data = loadFromLocalStorage();
-      if (data.length > 0) {
-        setPlatform(data[index]?.platform || "");
-        setLink(data[index]?.link || "");
-      }
-    }, [index]);
+  useEffect(() => {
+    // Load data from the database using Prisma on component mount
+    prisma.link
+      .findUnique({
+        where: { id: index },
+      })
+      .then((data) => {
+        if (data) {
+          setPlatform(data.platform || "");
+          setLink(data.link || "");
+        }
+      })
+      .catch((error) => {
+        console.error("Error loading data from the database", error);
+      });
+  }, [index]);
   return (
     <div className="p-8 bg-[#FAFAFA] rounded-xl shadow my-6" draggable>
       <div className="flex justify-start items-center cursor-pointer mb-3">
@@ -152,10 +156,6 @@ const AddLinkForm = ({ onAddLink, title, index, onRemove }) => {
         </div>
 
         {error && <p className="text-red-600">{error}</p>}
-
-        {/* <button onClick={handleSubmit} className="mt-4 bg-blue-500 text-white rounded-lg py-2">
-          Save
-        </button> */}
       </form>
     </div>
   );

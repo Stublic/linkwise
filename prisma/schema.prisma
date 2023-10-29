@@ -17,4 +17,13 @@ model User {
   id        Int     @id @default(autoincrement())
   email     String  @unique
   password  String
+  links   Link[]
+}
+
+model Link {
+  id       Int       @id @default(autoincrement())
+  platform String    // Add a platform field to store the platform name
+  url      String    // Add a url field to store the link URL
+  userId   Int
+  user     User      @relation(fields: [userId], references: [id])
 }

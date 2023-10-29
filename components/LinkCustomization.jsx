@@ -1,11 +1,25 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AddLinkForm from "@/components/Addlinkform";
 import Image from "next/image";
+import { prisma } from '../lib/prisma';
+
 
 const LinkCustomization = ({ addLinkComponent, showAddLinkForm, linkComponents, addLink, removeLink, handleSubmit }) => {
-  const linkDataInLocalStorage = JSON.parse(localStorage.getItem('linkData') || '[]'); // Parse the data and provide a default of an empty array
-
+  useEffect(() => {
+    // Fetch link data from the database using Prisma
+    prisma.link.findMany().then((dbLinks) => {
+      if (dbLinks.length > 0) {
+        // Create an array of link data for each link retrieved from the database
+        const linkDataFromDatabase = dbLinks.map((link, index) => ({
+          platform: link.platform, // Replace with the actual property name in your Prisma model
+          link: link.url, // Replace with the actual property name in your Prisma model
+        }));
+        // Set the link data retrieved from the database
+        // (You can add additional logic here to handle the retrieved data as needed)
+      }
+    });
+  }, []);
   return (
     <div className="p-6">
       <h2 className="heading-M text-[#333]">Customize your links</h2>
@@ -14,14 +28,15 @@ const LinkCustomization = ({ addLinkComponent, showAddLinkForm, linkComponents, 
       {(showAddLinkForm || linkDataInLocalStorage.length > 0) ? (
         <div>
           {linkComponents.map((title, index) => (
-            <AddLinkForm
-              onAddLink={addLink}
-              onRemove={removeLink}
-              title={title}
-              key={index}
-              index={index}
-              handleSubmit={handleSubmit}
-            />
+           <AddLinkForm
+           onAddLink={addLink}
+           onRemove={removeLink}
+           title={title}
+           key={index}
+           index={index}
+           linkData={linkDataFromDatabase[index]} // Pass the link data retrieved from the database
+           handleSubmit={handleSubmit}
+         />
           ))}
         </div>
       ) : (
