@@ -36,7 +36,6 @@ const Dashboard = () => {
    setShowAddLinkForm(true);
     if (linkComponents.length < maxLinks) {
       const newTitle = `Link #${linkComponents.length + 1}`;
-       console.log('object');
       setLinkComponents([...linkComponents, newTitle]);
     }else{
       alert("Maximum number of links added!")
